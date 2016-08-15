@@ -1,0 +1,22 @@
+{
+    "name": "adt/spark-post-api-mailer",
+    "description": "Sending emails through SparkPost API.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "AppsDevTeam",
+            "email": "hello@appsdevteam.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "require-dev": {
+        "nette/di": "^2.4",
+        "nette/mail": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "ADT\\SparkPostApiMailer\\": "src/"
+        }
+    }
+}
