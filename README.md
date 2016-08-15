@@ -1,1 +1,1 @@
-spark-post-api-mailer
+# SparkPostApiMailer

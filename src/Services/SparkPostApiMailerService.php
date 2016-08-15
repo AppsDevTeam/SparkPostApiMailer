@@ -7,12 +7,12 @@ class SparkPostApiMailerService extends \Nette\Object {
 
 	protected $config;
 
-	function __construct($config) {
+	public function setConfig(array $config) {
 		$this->config = $config;
 	}
 
 	public function send(\Nette\Mail\Message $mail) {
-
+		// TODO
 	}
 
 }
