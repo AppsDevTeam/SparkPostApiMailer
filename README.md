@@ -12,8 +12,10 @@
 
 	```neon
 	extensions:
-	    sparkPostApiMailer:
-	        authToken: <YOUR TOKEN>
+	    sparkPostApiMailer: ADT\SparkPostApiMailer\DI\SparkPostApiMailerExtension
+	
+	sparkPostApiMailer:
+		authToken: <YOUR TOKEN>
 	```
 
 ## Usage
@@ -32,7 +34,7 @@
 	function __construct(\Nette\Mail\IMailer $mailer) {
 	    $this->mailer = $mailer;
 	}
-	 
+	
 	function sendMail(\Nette\Mail\Message $mail) {
 	    $this->mailer->send($mail);
 	}
