@@ -38,7 +38,7 @@ class SparkPostApiMailerService extends \Nette\Object implements \Nette\Mail\IMa
 		curl_close($curl);
 
 		if ($err) {
-			throw new \Exception('SparkPostApiMailer cURL returned: ' . $err);
+			throw new \Nette\Mail\SendException('SparkPostApiMailer error: ' . $err);
 		}
 
 		return $response;
