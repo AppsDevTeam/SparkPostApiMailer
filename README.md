@@ -41,7 +41,7 @@
 2. with adt/single-recipient-mailer
 
 	Mailer.php
-	```
+	```php
 	class Mailer extends \ADT\Mail\SingleRecipientMailer {
 	    public function __construct(
 	        array $options,
