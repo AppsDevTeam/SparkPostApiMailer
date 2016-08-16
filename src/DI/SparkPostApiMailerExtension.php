@@ -15,7 +15,7 @@ class SparkPostApiMailerExtension extends \Nette\DI\CompilerExtension {
 		// register service
 		$builder->addDefinition($this->prefix('mailer'))
 			->setClass(Services\SparkPostApiMailerService::class)
-			->addSetup('setConfig(?)', [ $this->getConfig() ]);
+			->addSetup('$service->setConfig(?)', [ $this->getConfig() ]);
 	}
 
 
