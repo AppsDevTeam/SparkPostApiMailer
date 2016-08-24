@@ -10,19 +10,19 @@ class SparkPostApiMailerExtension extends \Nette\DI\CompilerExtension {
 	public function loadConfiguration() {
 		parent::loadConfiguration();
 
+		$config = $this->getConfig();
 		$builder = $this->getContainerBuilder();
 
-		// disable autowiring for all other IMailer services
-		foreach ($builder->getDefinitions() as $definition) {
-			if ($definition->getClass() === \Nette\Mail\IMailer::class) {
-				$definition->setAutowired(FALSE);
-			}
-		}
-
 		// register service
-		$builder->addDefinition($this->prefix('mailer'))
+		$builder->addDefinition($this->prefix('service'))
 			->setClass(Services\SparkPostApiMailerService::class)
-			->addSetup('$service->setConfig(?)', [ $this->getConfig() ]);
+			->addSetup('$service->setConfig(?)', [ $config ]);
+
+		if (!empty($config['registerMailer'])) {
+			$builder->addDefinition($this->prefix('mailer'))
+				->setClass(Services\SparkPostApiMailer::class)
+				->setInject();
+		}
 	}
 
 

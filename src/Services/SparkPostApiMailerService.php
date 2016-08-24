@@ -2,7 +2,7 @@
 
 namespace ADT\SparkPostApiMailer\Services;
 
-class SparkPostApiMailerService extends \Nette\Object implements \Nette\Mail\IMailer {
+class SparkPostApiMailerService extends \Nette\Object {
 
 	const SPARKPOST_ENDPOINT = 'https://api.sparkpost.com/api/v1';
 
