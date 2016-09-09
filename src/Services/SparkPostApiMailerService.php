@@ -33,12 +33,16 @@ class SparkPostApiMailerService extends \Nette\Object {
 		));
 
 		$response = curl_exec($curl);
+		$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		$err = curl_error($curl);
-
 		curl_close($curl);
 
 		if ($err) {
 			throw new \Nette\Mail\SendException('SparkPostApiMailer error: ' . $err);
+		}
+
+		if (substr($httpcode, 0, 1) !== '2') {
+			throw new \Nette\Mail\SendException('SparkPostApiMailer error: ' . $response);
 		}
 
 		return $response;
