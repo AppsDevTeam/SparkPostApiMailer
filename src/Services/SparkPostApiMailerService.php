@@ -56,6 +56,12 @@ class SparkPostApiMailerService extends \Nette\Object {
 		}
 
 		$message['content']['email_rfc822'] = $mail->generateMessage();
+
+		if (!empty($this->config['options'])) {
+			// pass transmission options
+			$message['options'] = $this->config['options'];
+		}
+
 		$this->createTransmission($message);
 	}
 
