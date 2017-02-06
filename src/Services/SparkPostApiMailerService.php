@@ -52,7 +52,14 @@ class SparkPostApiMailerService extends \Nette\Object {
 		$message = [];
 
 		foreach ([ 'To', 'Cc', 'Bcc' ] as $header) {
-			foreach ($mail->getHeader($header) as $email => $name) {
+			$addresses = $mail->getHeader($header);
+
+			if (!$addresses) {
+				// getHeader can return NULL
+				continue;
+			}
+
+			foreach ($addresses as $email => $name) {
 				$message['recipients'][]['address'] = [
 					'email' => $email,
 					'name' => $name,
