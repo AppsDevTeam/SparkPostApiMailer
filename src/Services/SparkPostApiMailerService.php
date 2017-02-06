@@ -49,10 +49,15 @@ class SparkPostApiMailerService extends \Nette\Object {
 	}
 
 	public function send(\Nette\Mail\Message $mail) {
-		$message = [ ];
+		$message = [];
 
-		foreach ($mail->getHeader('To') as $email => $name) {
-			$message['recipients'][]['address'] = $email;
+		foreach ([ 'To', 'Cc', 'Bcc' ] as $header) {
+			foreach ($mail->getHeader($header) as $email => $name) {
+				$message['recipients'][]['address'] = [
+					'email' => $email,
+					'name' => $name,
+				];
+			}
 		}
 
 		$message['content']['email_rfc822'] = $mail->generateMessage();
