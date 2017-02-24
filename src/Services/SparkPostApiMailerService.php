@@ -4,51 +4,31 @@ namespace ADT\SparkPostApiMailer\Services;
 
 class SparkPostApiMailerService extends \Nette\Object {
 
-	const SPARKPOST_ENDPOINT = 'https://api.sparkpost.com/api/v1';
-
 	protected $config;
+
+	/** @var \SparkPost\SparkPost */
+	protected $sparky;
 
 	public function setConfig(array $config) {
 		$this->config = $config;
+
+		$this->sparky->setOptions(
+			[
+				'key' => $config['authToken'],
+			]
+		);
 	}
 
-	protected function createTransmission($message) {
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-			CURLOPT_URL => static::SPARKPOST_ENDPOINT . '/transmissions?num_rcpt_errors=3',
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => "",
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 30,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_POSTFIELDS => json_encode($message),
-			CURLOPT_HTTPHEADER => array(
-				"accept: application/json",
-				"authorization: " . $this->config['authToken'],
-				"cache-control: no-cache",
-				"content-type: application/json",
-			),
-		));
-
-		$response = curl_exec($curl);
-		$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-		$err = curl_error($curl);
-		curl_close($curl);
-
-		if ($err) {
-			throw new \Nette\Mail\SendException('SparkPostApiMailer error: ' . $err);
-		}
-
-		if (substr($httpcode, 0, 1) !== '2') {
-			throw new \Nette\Mail\SendException('SparkPostApiMailer error: ' . $response);
-		}
-
-		return $response;
+	public function __construct() {
+		$httpClient = new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client);
+		$this->sparky = new \SparkPost\SparkPost($httpClient, []);
 	}
 
-	public function send(\Nette\Mail\Message $mail) {
+	/**
+	 * @param \Nette\Mail\Message $mail
+	 * @return \Http\Promise\Promise
+	 */
+	public function sendAsync(\Nette\Mail\Message $mail) {
 		$message = [];
 
 		foreach ([ 'To', 'Cc', 'Bcc' ] as $header) {
@@ -74,7 +54,23 @@ class SparkPostApiMailerService extends \Nette\Object {
 			$message['options'] = $this->config['options'];
 		}
 
-		$this->createTransmission($message);
+		return $this->sparky->transmissions->post($message)
+			->then(
+				NULL,
+				function (\SparkPost\SparkPostException $ex) {
+					throw new \Nette\Mail\SendException('SparkPostApiMailer error: ' . $ex->getMessage(), $ex->getCode(), $ex);
+				}
+			);
+	}
+
+	/**
+	 * @param \Nette\Mail\Message $mail
+	 * @return \SparkPost\SparkPostResponse
+	 * @throws
+	 */
+	public function sendSync(\Nette\Mail\Message $mail) {
+		return $this->sendAsync($mail)
+			->wait();
 	}
 
 }

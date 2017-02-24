@@ -9,7 +9,11 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
+    "require": {
+        "guzzlehttp/guzzle": "^6.2",
+        "php-http/guzzle6-adapter": "^1.1",
+        "sparkpost/sparkpost": "^2.1"
+    },
     "require-dev": {
         "nette/di": "^2.4",
         "nette/mail": "^2.4"
