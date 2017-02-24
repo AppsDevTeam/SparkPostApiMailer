@@ -12,16 +12,16 @@ class SparkPostApiMailerService extends \Nette\Object {
 	public function setConfig(array $config) {
 		$this->config = $config;
 
-		$this->sparky->setOptions(
-			[
-				'key' => $config['authToken'],
-			]
-		);
-	}
+		$sparkyOptions = [
+			'key' => $config['authToken'],
+		];
 
-	public function __construct() {
-		$httpClient = new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client);
-		$this->sparky = new \SparkPost\SparkPost($httpClient, []);
+		if (!$this->sparky) {
+			$httpClient = new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client);
+			$this->sparky = new \SparkPost\SparkPost($httpClient, $sparkyOptions);
+		} else {
+			$this->sparky->setOptions($sparkyOptions);
+		}
 	}
 
 	/**
@@ -68,7 +68,7 @@ class SparkPostApiMailerService extends \Nette\Object {
 	 * @return \SparkPost\SparkPostResponse
 	 * @throws
 	 */
-	public function sendSync(\Nette\Mail\Message $mail) {
+	public function send(\Nette\Mail\Message $mail) {
 		return $this->sendAsync($mail)
 			->wait();
 	}

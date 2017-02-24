@@ -18,7 +18,7 @@ trait SparkPostApiMailerTrait {
 	 * @throws \Nette\Mail\SendException
 	 */
 	public function send(\Nette\Mail\Message $mail) {
-		$this->sendSync($mail);
+		$this->sparkPostApiMailerService->send($mail);
 	}
 
 	/**
@@ -27,14 +27,5 @@ trait SparkPostApiMailerTrait {
 	 */
 	public function sendAsync(\Nette\Mail\Message $mail) {
 		return $this->sparkPostApiMailerService->sendAsync($mail);
-	}
-
-	/**
-	 * @param \Nette\Mail\Message $mail
-	 * @return \SparkPost\SparkPostResponse
-	 * @throws \Nette\Mail\SendException
-	 */
-	public function sendSync(\Nette\Mail\Message $mail) {
-		return $this->sparkPostApiMailerService->sendSync($mail);
 	}
 }
