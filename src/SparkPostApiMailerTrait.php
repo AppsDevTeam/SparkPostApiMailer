@@ -28,4 +28,20 @@ trait SparkPostApiMailerTrait {
 	public function sendAsync(\Nette\Mail\Message $mail) {
 		return $this->sparkPostApiMailerService->sendAsync($mail);
 	}
+
+	/**
+	 * @param string $recipient
+	 * @return FALSE|array
+	 */
+	public function getSuppressionDetails($recipient) {
+		return $this->sparkPostApiMailerService->getSuppressionDetails($recipient);
+	}
+
+	/**
+	 * @param $recipient
+	 * @return bool
+	 */
+	public function removeSuppression($recipient) {
+		return $this->sparkPostApiMailerService->removeSuppression($recipient);
+	}
 }

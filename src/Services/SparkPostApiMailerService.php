@@ -73,4 +73,35 @@ class SparkPostApiMailerService extends \Nette\Object {
 			->wait();
 	}
 
+	/**
+	 * @param string $recipient
+	 * @return FALSE|array
+	 */
+	public function getSuppressionDetails($recipient) {
+		try {
+			$response = $this->sparky->syncRequest('GET', 'suppression-list/' . urlencode($recipient));
+
+			if ($response->getStatusCode() !== 200) {
+				return FALSE;
+			}
+
+			return $response->getBody();
+		} catch (\SparkPost\SparkPostException $e) {
+			return FALSE;
+		}
+	}
+
+	/**
+	 * @param $recipient
+	 * @return bool
+	 */
+	public function removeSuppression($recipient) {
+		try {
+			$response = $this->sparky->syncRequest('DELETE', 'suppression-list/' . urlencode($recipient));
+
+			return $response->getStatusCode() === 204;
+		} catch (\SparkPost\SparkPostException $e) {
+			return FALSE;
+		}
+	}
 }
