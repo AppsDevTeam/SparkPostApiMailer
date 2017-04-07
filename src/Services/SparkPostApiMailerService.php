@@ -54,23 +54,37 @@ class SparkPostApiMailerService extends \Nette\Object {
 			$message['options'] = $this->config['options'];
 		}
 
-		return $this->sparky->transmissions->post($message)
-			->then(
-				NULL,
-				function (\SparkPost\SparkPostException $ex) {
-					throw new \Nette\Mail\SendException('SparkPostApiMailer error: ' . $ex->getMessage(), $ex->getCode(), $ex);
-				}
-			);
+		return $this->sparky->transmissions->post($message);
 	}
 
 	/**
 	 * @param \Nette\Mail\Message $mail
-	 * @return \SparkPost\SparkPostResponse
+	 * @return int Transmission id
 	 * @throws
 	 */
 	public function send(\Nette\Mail\Message $mail) {
-		return $this->sendAsync($mail)
-			->wait();
+		try {
+			/** @var \SparkPost\SparkPostResponse $response */
+			$response = $this->sendAsync($mail)
+				->wait();
+
+			/*
+			 * Response body:
+			 * Array
+			 * (
+			 *   [results] => Array
+			 *   (
+			 *     [total_rejected_recipients] => 0
+			 *     [total_accepted_recipients] => 3
+			 *     [id] => 102583775931650787
+			 *   )
+			 * )
+			 */
+
+			return $response->getBody()['results']['id'];
+		} catch (\Exception $ex) {
+			throw new \Nette\Mail\SendException($ex->getMessage(), $ex->getCode(), $ex);
+		}
 	}
 
 	/**
