@@ -2,7 +2,9 @@
 
 namespace ADT\SparkPostApiMailer\Services;
 
-class SparkPostApiMailerService extends \Nette\Object {
+class SparkPostApiMailerService {
+	
+	use \Nette\SmartObject;
 
 	protected $config;
 
