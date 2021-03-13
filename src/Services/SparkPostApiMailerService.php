@@ -2,9 +2,6 @@
 
 namespace ADT\SparkPostApiMailer\Services;
 
-use Nette\Caching\Cache;
-use Nette\Caching\Storages\FileStorage;
-
 class SparkPostApiMailerService {
 	
 	use \Nette\SmartObject;
