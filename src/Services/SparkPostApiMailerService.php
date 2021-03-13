@@ -2,6 +2,9 @@
 
 namespace ADT\SparkPostApiMailer\Services;
 
+use Nette\Caching\Cache;
+use Nette\Caching\Storages\FileStorage;
+
 class SparkPostApiMailerService {
 	
 	use \Nette\SmartObject;
@@ -119,5 +122,10 @@ class SparkPostApiMailerService {
 		} catch (\SparkPost\SparkPostException $e) {
 			return FALSE;
 		}
+	}
+
+	public function getSendingDomains()
+	{
+		return $this->sparky->syncRequest('GET', 'sending-domains')->getBody()['results'];
 	}
 }
