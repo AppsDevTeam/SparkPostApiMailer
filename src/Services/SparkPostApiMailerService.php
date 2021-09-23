@@ -19,7 +19,9 @@ class SparkPostApiMailerService {
 		];
 
 		if (!$this->sparky) {
-			$httpClient = new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client);
+			$httpClient = new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client([
+				'timeout' => 30,
+			]));
 			$this->sparky = new \SparkPost\SparkPost($httpClient, $sparkyOptions);
 		} else {
 			$this->sparky->setOptions($sparkyOptions);
