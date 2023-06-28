@@ -58,6 +58,11 @@ class SparkPostApiMailerService {
 			$message['options'] = $this->config['options'];
 		}
 
+		if (!empty($this->config['return_path'])) {
+			// pass transmission return_path
+			$message['return_path'] = $this->config['return_path'];
+		}
+
 		return $this->sparky->transmissions->post($message);
 	}
 
