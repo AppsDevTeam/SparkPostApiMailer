@@ -49,6 +49,10 @@ class SparkPostApiMailerService {
 					'name' => $name,
 				];
 			}
+
+			if ($header === 'Bcc') {
+				$mail->setHeader('Bcc', null);
+			}
 		}
 
 		$message['content']['email_rfc822'] = $mail->generateMessage();
