@@ -10,6 +10,16 @@ class SparkPostApiMailerService {
 
 	/** @var \SparkPost\SparkPost */
 	protected $sparky;
+	
+	private $lastException = null;
+
+	/**
+	 * @return \Exception|null
+	 */
+	public function getLastException()
+	{
+		return $this->lastException;
+	}
 
 	public function setConfig(array $config) {
 		$this->config = $config;
@@ -114,6 +124,7 @@ class SparkPostApiMailerService {
 
 			return $response->getBody();
 		} catch (\SparkPost\SparkPostException $e) {
+			$this->lastException = $e;
 			return FALSE;
 		}
 	}
@@ -128,6 +139,7 @@ class SparkPostApiMailerService {
 
 			return $response->getStatusCode() === 204;
 		} catch (\SparkPost\SparkPostException $e) {
+			$this->lastException = $e;
 			return FALSE;
 		}
 	}
