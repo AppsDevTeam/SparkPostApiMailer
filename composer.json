@@ -13,6 +13,7 @@
         "guzzlehttp/guzzle": "^7.9",
         "php-http/guzzle7-adapter": "^1.1",
         "nyholm/psr7": "^1.8",
+        "php-http/message-factory": "^1.1",
         "sparkpost/sparkpost": "^2.1"
     },
     "require-dev": {
