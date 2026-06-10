@@ -148,4 +148,31 @@ class SparkPostApiMailerService {
 	{
 		return $this->sparky->syncRequest('GET', 'sending-domains')->getBody()['results'];
 	}
+
+	/**
+	 * Vrátí jednu stránku suppression listu s kurzorovou paginací.
+	 * https://developers.sparkpost.com/api/suppression-list.html#suppression-list-search-get
+	 *
+	 * @param string|null $cursor Kurzor další stránky (z linku 'rel: next'), null = první stránka
+	 * @param int $perPage
+	 * @return FALSE|array Tělo odpovědi (klíče 'results', 'links', 'total_count'), nebo FALSE při chybě
+	 */
+	public function getSuppressions($cursor = null, $perPage = 10000) {
+		try {
+			$payload = [ 'per_page' => $perPage ];
+			// "cursor=" (i prázdný) přepne SparkPost do kurzorové paginace
+			$payload['cursor'] = $cursor ?? '';
+
+			$response = $this->sparky->syncRequest('GET', 'suppression-list', $payload);
+
+			if ($response->getStatusCode() !== 200) {
+				return FALSE;
+			}
+
+			return $response->getBody();
+		} catch (\SparkPost\SparkPostException $e) {
+			$this->lastException = $e;
+			return FALSE;
+		}
+	}
 }
