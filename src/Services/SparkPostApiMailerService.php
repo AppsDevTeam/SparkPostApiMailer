@@ -160,8 +160,11 @@ class SparkPostApiMailerService {
 	public function getSuppressions($cursor = null, $perPage = 10000) {
 		try {
 			$payload = [ 'per_page' => $perPage ];
-			// "cursor=" (i prázdný) přepne SparkPost do kurzorové paginace
-			$payload['cursor'] = $cursor ?? '';
+			// Prázdný cursor neposíláme – SparkPost vrací 400 "cursor can't be empty".
+			// Bez cursoru se použije default 'initial' (první stránka); další stránky berou cursor z 'rel: next' linku.
+			if ($cursor) {
+				$payload['cursor'] = $cursor;
+			}
 
 			$response = $this->sparky->syncRequest('GET', 'suppression-list', $payload);
 
